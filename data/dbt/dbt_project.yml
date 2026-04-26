@@ -1,0 +1,24 @@
+name: wootd
+version: "1.0.0"
+config-version: 2
+
+profile: wootd
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  wootd:
+    bronze:
+      +materialized: external
+      +external_location: "s3://{{ env_var('R2_BUCKET_NAME') }}/bronze/{name}/**/*.parquet"
+    silver:
+      +materialized: table
+    gold:
+      +materialized: table
