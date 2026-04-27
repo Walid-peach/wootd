@@ -1,6 +1,5 @@
 """LightGBM engine. Loads the current model artifact from R2 at startup."""
 
-import io
 import pickle
 from typing import Any
 
