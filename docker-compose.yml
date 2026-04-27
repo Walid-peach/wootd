@@ -7,8 +7,15 @@ services:
     volumes:
       - ./api:/app
     depends_on:
-      - mlflow
+      mlflow:
+        condition: service_healthy
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   web:
     image: node:20-alpine
@@ -17,26 +24,35 @@ services:
       - ./web:/app
     ports:
       - "4321:4321"
-    command: npm run dev -- --host
+    command: sh -c "npm install && npm run dev -- --host"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4321"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   mlflow:
-    image: python:3.11-slim
-    working_dir: /mlflow
-    volumes:
-      - mlflow_data:/mlflow
+    build: ./infra/mlflow
     ports:
       - "5000:5000"
     env_file: .env
-    command: >
-      bash -c "pip install mlflow psycopg2-binary &&
-               mlflow server
-               --backend-store-uri ${DATABASE_URL}
-               --default-artifact-root s3://${R2_BUCKET_NAME}/models
-               --host 0.0.0.0 --port 5000"
     environment:
       AWS_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY}
       MLFLOW_S3_ENDPOINT_URL: ${R2_ENDPOINT_URL}
+    command: >
+      mlflow server
+      --backend-store-uri ${DATABASE_URL}
+      --default-artifact-root s3://${R2_BUCKET_NAME}/models
+      --host 0.0.0.0
+      --port 5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
 volumes:
   mlflow_data:
