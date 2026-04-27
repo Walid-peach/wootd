@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Install Python deps
+        run: uv sync --all-packages
+
+      - name: Ruff
+        run: uv run ruff check api/ data/
+
+      - name: Mypy
+        run: uv run mypy api/app data/ingestion data/ml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Node deps
+        run: cd web && npm ci
+
+      - name: Prettier check
+        run: cd web && npx prettier --check src/
+
+  test-python:
+    name: Test (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Install deps
+        run: uv sync --all-packages
+
+      - name: Pytest
+        run: uv run pytest api/tests/ data/tests/ -v
+
+  test-web:
+    name: Test (Web)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install deps
+        run: cd web && npm ci
+
+      - name: Astro check
+        run: cd web && npm run check
