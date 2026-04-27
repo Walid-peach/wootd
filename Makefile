@@ -23,7 +23,8 @@ down: ## Stop the local stack
 
 lint: ## Check Python (ruff + mypy) and web (prettier)
 	uv run ruff check api/ data/
-	uv run mypy api/app data/ingestion data/ml
+	cd api && uv run mypy app
+	cd data && uv run mypy ingestion ml
 	cd web && npx prettier --check src/
 
 fmt: ## Auto-format Python (ruff) and web (prettier)

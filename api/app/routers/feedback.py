@@ -16,7 +16,7 @@ class FeedbackIn(BaseModel):
 def post_feedback(body: FeedbackIn) -> None:
     from supabase import create_client
 
-    sb = create_client(settings.supabase_url, settings.supabase_service_role_key)  # type: ignore[attr-defined]
+    sb = create_client(settings.supabase_url, settings.supabase_service_role_key)
     sb.table("feedback").insert({
         "recommendation_id": body.recommendation_id,
         "rating": body.rating,
