@@ -13,7 +13,11 @@ class Settings(BaseSettings):
     r2_secret_access_key: str
     r2_bucket_name: str = "wootd-lakehouse"
 
-    database_url: str
+    supabase_url: str = ""
+    supabase_anon_key: str = ""
+    supabase_service_role_key: str = ""
+
+    database_url: str = ""
     sentry_dsn: str = ""
 
     mlflow_tracking_uri: str = "http://localhost:5000"
