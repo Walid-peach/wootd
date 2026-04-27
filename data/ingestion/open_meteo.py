@@ -19,7 +19,10 @@ CITIES: list[dict[str, float | str]] = [
 API_URL = "https://api.open-meteo.com/v1/forecast"
 PARAMS = {
     "hourly": "temperature_2m,precipitation_probability,windspeed_10m,uv_index",
-    "daily": "temperature_2m_max,temperature_2m_min,precipitation_probability_max,windspeed_10m_max,uv_index_max",
+    "daily": (
+        "temperature_2m_max,temperature_2m_min,"
+        "precipitation_probability_max,windspeed_10m_max,uv_index_max"
+    ),
     "forecast_days": 7,
     "timezone": "UTC",
 }

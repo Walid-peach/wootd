@@ -69,7 +69,10 @@ def get_recommendation(
 
     if row is None:
         from fastapi import HTTPException
-        raise HTTPException(status_code=404, detail=f"No forecast found for {city} on {forecast_date}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"No forecast found for {city} on {forecast_date}",
+        )
 
     weather = WeatherSnapshot(
         temp_min_c=row[0],
