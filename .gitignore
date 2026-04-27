@@ -45,3 +45,6 @@ Thumbs.db
 
 # Docker
 *.override.yml
+
+# Personal session notes
+notes/
