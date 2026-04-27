@@ -7,7 +7,8 @@ import boto3
 import lightgbm as lgb
 
 from app.core.config import settings
-from app.engines.rules import Outfit, WeatherSnapshot, recommend as rules_recommend
+from app.engines.rules import Outfit, WeatherSnapshot
+from app.engines.rules import recommend as rules_recommend
 
 
 class MLEngine:
@@ -41,7 +42,7 @@ class MLEngine:
             return rules_recommend(weather)
 
         # Feature vector order must match training (see data/ml/features.py)
-        features = [[
+        [[
             weather.temp_min_c,
             weather.temp_max_c,
             (weather.temp_min_c + weather.temp_max_c) / 2,

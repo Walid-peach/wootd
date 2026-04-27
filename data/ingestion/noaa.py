@@ -1,7 +1,7 @@
 """Ingest forecasts from NOAA for US cities (no API key required)."""
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pyarrow as pa
 import requests
@@ -26,7 +26,7 @@ def fetch(city: dict) -> dict:
 
 
 def ingest() -> None:
-    ts = datetime.now(timezone.utc)
+    ts = datetime.now(UTC)
     rows: list[dict] = []
 
     for city in US_CITIES:

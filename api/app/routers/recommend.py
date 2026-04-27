@@ -1,18 +1,19 @@
 import uuid
 from datetime import date
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated
 
 from fastapi import APIRouter, Query, Request
 from pydantic import BaseModel
 
 from app.core.storage import get_duckdb, gold_path
-from app.engines.rules import WeatherSnapshot, recommend as rules_recommend
+from app.engines.rules import WeatherSnapshot
+from app.engines.rules import recommend as rules_recommend
 
 router = APIRouter()
 
 
-class Engine(str, Enum):
+class Engine(StrEnum):
     rules = "rules"
     ml = "ml"
 

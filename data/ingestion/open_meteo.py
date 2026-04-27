@@ -1,8 +1,7 @@
 """Ingest hourly forecasts from Open-Meteo (no API key required)."""
 
 import json
-import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pyarrow as pa
 import requests
@@ -37,7 +36,7 @@ def fetch(city: dict[str, float | str]) -> dict:
 
 
 def ingest() -> None:
-    ts = datetime.now(timezone.utc)
+    ts = datetime.now(UTC)
     rows: list[dict] = []
 
     for city in CITIES:

@@ -1,7 +1,7 @@
 """Shared utilities for writing bronze Parquet to R2."""
 
 import os
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import boto3
 import pyarrow as pa
@@ -24,7 +24,7 @@ def _s3_client() -> boto3.client:  # type: ignore[type-arg]
 
 def write_bronze(provider: str, table: pa.Table, ts: datetime | None = None) -> str:
     """Write a PyArrow table to bronze/<provider>/date=YYYY-MM-DD/hour=HH/data.parquet."""
-    ts = ts or datetime.now(timezone.utc)
+    ts = ts or datetime.now(UTC)
     key = f"bronze/{provider}/date={ts.strftime('%Y-%m-%d')}/hour={ts.strftime('%H')}/data.parquet"
 
     buf = pa.BufferOutputStream()
