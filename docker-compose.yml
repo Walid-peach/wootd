@@ -28,12 +28,12 @@ services:
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:4321"]
       interval: 10s
-      timeout: 5s
+      timeout: 3s
       retries: 3
       start_period: 30s
 
   mlflow:
-    build: ./infra/mlflow
+    build: ./infra/mlflow 
     ports:
       - "5000:5000"
     env_file: .env
