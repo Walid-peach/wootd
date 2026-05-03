@@ -2,13 +2,21 @@
 
 import json
 from datetime import UTC, datetime
+from typing import Any, TypedDict, cast
 
 import pyarrow as pa
 import requests
 
-from data.ingestion.common import write_bronze
+from ingestion.common import write_bronze
 
-CITIES: list[dict[str, float | str]] = [
+
+class City(TypedDict):
+    name: str
+    lat: float
+    lon: float
+
+
+CITIES: list[City] = [
     {"name": "Paris",     "lat": 48.8566,  "lon": 2.3522},
     {"name": "London",    "lat": 51.5074,  "lon": -0.1278},
     {"name": "New York",  "lat": 40.7128,  "lon": -74.0060},
@@ -17,7 +25,7 @@ CITIES: list[dict[str, float | str]] = [
 ]
 
 API_URL = "https://api.open-meteo.com/v1/forecast"
-PARAMS = {
+PARAMS: dict[str, str | int] = {
     "hourly": "temperature_2m,precipitation_probability,windspeed_10m,uv_index",
     "daily": (
         "temperature_2m_max,temperature_2m_min,"
@@ -28,19 +36,19 @@ PARAMS = {
 }
 
 
-def fetch(city: dict[str, float | str]) -> dict:
+def fetch(city: City) -> dict[str, Any]:
     resp = requests.get(
         API_URL,
         params={**PARAMS, "latitude": city["lat"], "longitude": city["lon"]},
         timeout=30,
     )
     resp.raise_for_status()
-    return resp.json()
+    return cast("dict[str, Any]", resp.json())
 
 
 def ingest() -> None:
     ts = datetime.now(UTC)
-    rows: list[dict] = []
+    rows: list[dict[str, Any]] = []
 
     for city in CITIES:
         data = fetch(city)

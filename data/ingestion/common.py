@@ -2,24 +2,26 @@
 
 import os
 from datetime import UTC, datetime
+from typing import Any
 
 import boto3
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-R2_ENDPOINT = os.environ["R2_ENDPOINT_URL"]
-R2_KEY = os.environ["R2_ACCESS_KEY_ID"]
-R2_SECRET = os.environ["R2_SECRET_ACCESS_KEY"]
-R2_BUCKET = os.environ.get("R2_BUCKET_NAME", "wootd-lakehouse")
+DEFAULT_R2_BUCKET = "wootd-lakehouse"
 
 
-def _s3_client() -> boto3.client:  # type: ignore[type-arg]
+def _s3_client() -> Any:
     return boto3.client(
         "s3",
-        endpoint_url=R2_ENDPOINT,
-        aws_access_key_id=R2_KEY,
-        aws_secret_access_key=R2_SECRET,
+        endpoint_url=os.environ["R2_ENDPOINT_URL"],
+        aws_access_key_id=os.environ["R2_ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["R2_SECRET_ACCESS_KEY"],
     )
+
+
+def _r2_bucket() -> str:
+    return os.environ.get("R2_BUCKET_NAME", DEFAULT_R2_BUCKET)
 
 
 def write_bronze(provider: str, table: pa.Table, ts: datetime | None = None) -> str:
@@ -31,7 +33,7 @@ def write_bronze(provider: str, table: pa.Table, ts: datetime | None = None) -> 
     pq.write_table(table, buf, compression="snappy")
 
     _s3_client().put_object(
-        Bucket=R2_BUCKET,
+        Bucket=_r2_bucket(),
         Key=key,
         Body=buf.getvalue().to_pybytes(),
         ContentType="application/octet-stream",

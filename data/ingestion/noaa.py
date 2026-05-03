@@ -2,13 +2,14 @@
 
 import json
 from datetime import UTC, datetime
+from typing import Any, cast
 
 import pyarrow as pa
 import requests
 
-from data.ingestion.common import write_bronze
+from ingestion.common import write_bronze
 
-US_CITIES: list[dict] = [
+US_CITIES: list[dict[str, str | int]] = [
     {"name": "New York",  "office": "OKX", "gridX": 33, "gridY": 37},
     {"name": "Chicago",   "office": "LOT", "gridX": 76, "gridY": 73},
     {"name": "Los Angeles", "office": "LOX", "gridX": 149, "gridY": 43},
@@ -18,16 +19,16 @@ BASE_URL = "https://api.weather.gov"
 HEADERS = {"User-Agent": "wootd/0.1 (walidelkhoukh99@gmail.com)"}
 
 
-def fetch(city: dict) -> dict:
+def fetch(city: dict[str, str | int]) -> dict[str, Any]:
     url = f"{BASE_URL}/gridpoints/{city['office']}/{city['gridX']},{city['gridY']}/forecast"
     resp = requests.get(url, headers=HEADERS, timeout=30)
     resp.raise_for_status()
-    return resp.json()
+    return cast("dict[str, Any]", resp.json())
 
 
 def ingest() -> None:
     ts = datetime.now(UTC)
-    rows: list[dict] = []
+    rows: list[dict[str, Any]] = []
 
     for city in US_CITIES:
         try:
