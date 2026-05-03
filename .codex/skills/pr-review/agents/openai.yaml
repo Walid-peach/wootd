@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Review"
+  short_description: "Review branch or PR readiness"
+  default_prompt: "Review the current branch or pull request and give merge-readiness feedback."

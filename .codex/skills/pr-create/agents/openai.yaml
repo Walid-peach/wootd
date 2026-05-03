@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Create"
+  short_description: "Prepare clean pull requests"
+  default_prompt: "Prepare a reviewer-friendly pull request for the current branch."

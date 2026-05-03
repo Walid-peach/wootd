@@ -12,6 +12,7 @@ dev-dependencies = [
     "ruff>=0.4.0",
     "mypy>=1.10.0",
     "python-dotenv>=1.0.0",
+    "types-requests>=2.31.0",
 ]
 
 [tool.ruff]
@@ -33,4 +34,5 @@ disallow_untyped_defs = false
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+pythonpath = ["api", "data"]
 testpaths = ["api/tests", "data/tests"]
