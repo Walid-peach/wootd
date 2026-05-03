@@ -37,9 +37,21 @@ Prepare or update one pull request for the current branch. Optimize for reviewer
    - For Phase 0, emphasize scaffolding, local setup, CI, `.env.example`, Docker Compose, tooling, and smoke tests.
    - For data changes, call out whether `make dbt-test` is applicable. If dbt models are still stubs, say that explicitly.
    - For API/data/web changes, prefer this validation set when applicable: `make lint`, `make test`, `cd web && npm run check`, `docker compose config`, and `make dev` if Docker and secrets are available.
+   - Add a CI-readiness pass when workflows, setup, tooling, lockfiles, generated files, packaging, or tests changed.
    - Mention account/secrets work separately from code changes; do not imply secrets or hosted infrastructure are complete unless verified.
 
-6. Prepare a title.
+6. Run CI-readiness checks before creating the PR.
+   - Inspect `.github/workflows/**` when CI config exists or setup/tooling changed.
+   - Confirm files referenced by CI are committed and not ignored:
+     - Lockfiles such as `uv.lock` and `package-lock.json`.
+     - Generated type files such as `web/src/env.d.ts` when CI expects them.
+     - Config files referenced by workflow cache keys.
+   - If using `astral-sh/setup-uv`, do not pass `python-version`; use `actions/setup-python` separately.
+   - If `setup-uv` cache is enabled, verify `uv.lock` exists in the repo or configure `cache-dependency-glob` to match a committed file.
+   - Check for duplicate Python package names in test folders, especially multiple `tests/__init__.py` packages.
+   - After local validation, mention whether GitHub Actions was observed green, pending, not yet run, or not checked.
+
+7. Prepare a title.
    - Use a clear, action-oriented title.
    - Prefer `<area>: <change>`.
    - Examples for WOOTD:
@@ -48,14 +60,14 @@ Prepare or update one pull request for the current branch. Optimize for reviewer
      - `api: add rule-engine recommendation smoke tests`
    - Avoid vague titles like `updates`, `fixes`, or `changes`.
 
-7. Draft the PR description in `notes/pr_<sanitized-branch-name>.md`.
+8. Draft the PR description in `notes/pr_<sanitized-branch-name>.md`.
    - Replace `/` with `_`.
    - Lowercase the name.
    - Keep it concise and filesystem-safe.
    - Create `notes/` if it is missing.
    - Do not commit `notes/` unless the repository intentionally tracks PR notes.
 
-8. Use this PR description structure:
+9. Use this PR description structure:
 
 ```markdown
 ## What
@@ -82,19 +94,19 @@ Explain the problem, context, or reason the change is needed.
 None, or explain the impact clearly.
 ```
 
-9. Update an existing PR carefully.
+10. Update an existing PR carefully.
    - Read the existing PR title and description first.
    - Compare them with the current diff.
    - Update only inaccurate or missing parts.
    - Preserve useful reviewer context that remains true.
    - Do not rewrite a good description unnecessarily.
 
-10. Check docs only when justified.
+11. Check docs only when justified.
    - Update `README.md` only if setup, usage, config, examples, or user-facing behavior changed.
    - Update `AGENTS.md` or `CLAUDE.md` only if repo instructions, workflow rules, or agent guidance changed.
    - Do not add docs churn just to make a PR look larger.
 
-11. Create or update the PR when asked.
+12. Create or update the PR when asked.
    - Prefer the available GitHub connector/app for PR metadata and mutations.
    - If using GitHub CLI or git remotes, verify the repo and branch before pushing or creating a PR.
    - Never invent a PR URL. Report only URLs returned by the tool.
