@@ -1,1 +1,16 @@
-FastAPI service — outfit recommendations, feedback ingestion, health endpoint. Runs on Cloud Run in production. See root README for API reference.
+# API
+
+FastAPI service for outfit recommendations and user feedback.
+
+The API reads recommendation-ready weather data from Snowflake:
+
+```text
+Snowflake MARTS.FCT_DAILY_FORECAST -> FastAPI /recommend
+FastAPI /feedback -> Snowflake RAW.USER_FEEDBACK
+```
+
+Run locally:
+
+```bash
+make api-dev
+```

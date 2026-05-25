@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Query, Request
 from pydantic import BaseModel
 
-from app.core.storage import get_duckdb, gold_path
+from app.core.storage import fetch_daily_forecast
 from app.engines.rules import WeatherSnapshot
 from app.engines.rules import recommend as rules_recommend
 
@@ -55,31 +55,22 @@ def get_recommendation(
     if forecast_date is None:
         forecast_date = date.today()
 
-    con = get_duckdb()
-    row = con.execute(
-        f"""
-        SELECT temp_min_c, temp_max_c, precip_probability, wind_kmh, uv_index
-        FROM read_parquet('{gold_path("gold_daily_forecast")}')
-        WHERE lower(city_name) = lower(?)
-          AND forecast_date = ?
-        LIMIT 1
-        """,
-        [city, forecast_date],
-    ).fetchone()
+    row = fetch_daily_forecast(city, forecast_date)
 
     if row is None:
         from fastapi import HTTPException
+
         raise HTTPException(
             status_code=404,
             detail=f"No forecast found for {city} on {forecast_date}",
         )
 
     weather = WeatherSnapshot(
-        temp_min_c=row[0],
-        temp_max_c=row[1],
-        precip_probability=row[2],
-        wind_kmh=row[3],
-        uv_index=row[4],
+        temp_min_c=row["TEMP_MIN_C"],
+        temp_max_c=row["TEMP_MAX_C"],
+        precip_probability=row["PRECIP_PROBABILITY"],
+        wind_kmh=row["WIND_KMH"],
+        uv_index=row["UV_INDEX"],
     )
 
     if engine == Engine.ml:

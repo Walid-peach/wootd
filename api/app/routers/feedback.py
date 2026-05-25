@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
-from app.core.config import settings
+from app.core.storage import insert_feedback
 
 router = APIRouter()
 
@@ -14,11 +14,8 @@ class FeedbackIn(BaseModel):
 
 @router.post("/feedback", status_code=204)
 def post_feedback(body: FeedbackIn) -> None:
-    from supabase import create_client
-
-    sb = create_client(settings.supabase_url, settings.supabase_service_role_key)
-    sb.table("feedback").insert({
-        "recommendation_id": body.recommendation_id,
-        "rating": body.rating,
-        "notes": body.notes,
-    }).execute()
+    insert_feedback(
+        recommendation_id=body.recommendation_id,
+        rating=body.rating,
+        notes=body.notes,
+    )

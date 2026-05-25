@@ -27,11 +27,13 @@ dist/
 data/dbt/target/
 data/dbt/dbt_packages/
 data/dbt/logs/
+data/dbt/.user.yml
+logs/
 
 # Environment
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # OS
 .DS_Store
@@ -48,3 +50,6 @@ Thumbs.db
 
 # Personal session notes
 notes/
+
+# Local credential/debug scripts
+scripts/testsnowcon.py

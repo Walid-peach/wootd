@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: stg_open_meteo_forecasts
+    description: Daily Open-Meteo forecasts parsed from raw JSON payloads.
+    columns:
+      - name: city_name
+        tests:
+          - not_null
+      - name: forecast_date
+        tests:
+          - not_null
+      - name: temp_min_c
+        tests:
+          - not_null
+      - name: temp_max_c
+        tests:
+          - not_null
+      - name: precip_probability
+        tests:
+          - not_null
+
+  - name: stg_noaa_forecasts
+    description: NOAA forecast periods normalized into the shared weather columns.
+    columns:
+      - name: city_name
+        tests:
+          - not_null
+      - name: forecast_date
+        tests:
+          - not_null
+      - name: temp_min_c
+        tests:
+          - not_null
+      - name: temp_max_c
+        tests:
+          - not_null
+
+  - name: stg_user_feedback
+    description: Feedback events normalized from the RAW.USER_FEEDBACK table.
+    columns:
+      - name: recommendation_id
+        tests:
+          - not_null
+      - name: rating
+        tests:
+          - not_null
+          - accepted_values:
+              values: [-1, 0, 1]

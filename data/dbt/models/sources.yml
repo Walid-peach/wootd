@@ -1,0 +1,45 @@
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('DBT_SNOWFLAKE_DATABASE', 'WOOTD_DB') }}"
+    schema: "{{ env_var('DBT_SNOWFLAKE_SCHEMA', 'RAW') }}"
+    description: Raw ingestion tables loaded directly into Snowflake.
+    tables:
+      - name: OPEN_METEO_FORECASTS
+        description: Raw Open-Meteo forecast API responses, one row per city and ingestion run.
+        columns:
+          - name: CITY_NAME
+            tests:
+              - not_null
+          - name: INGESTED_AT
+            tests:
+              - not_null
+          - name: PAYLOAD
+            tests:
+              - not_null
+
+      - name: NOAA_FORECASTS
+        description: Raw NOAA forecast API responses, one row per US city and ingestion run.
+        columns:
+          - name: CITY_NAME
+            tests:
+              - not_null
+          - name: INGESTED_AT
+            tests:
+              - not_null
+          - name: PAYLOAD
+            tests:
+              - not_null
+
+      - name: USER_FEEDBACK
+        description: Raw recommendation feedback events sent by the API.
+        columns:
+          - name: RECOMMENDATION_ID
+            tests:
+              - not_null
+          - name: RATING
+            tests:
+              - not_null
+              - accepted_values:
+                  values: [-1, 0, 1]
