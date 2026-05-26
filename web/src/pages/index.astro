@@ -60,7 +60,9 @@ const engineRows = [
     <header class="site-header" aria-label="Main navigation">
       <a class="brand" href="#top" aria-label="WOOTD home">
         <span class="brand-mark" aria-hidden="true">
-          <img src="/assets/wootd-brand.png" alt="" />
+          <span class="mark-hook"></span>
+          <span class="mark-sun"></span>
+          <span class="mark-cloud"></span>
         </span>
         <span>
           <strong>WOOTD</strong>
@@ -347,6 +349,7 @@ const engineRows = [
     justify-content: space-between;
     gap: 24px;
     width: min(1160px, calc(100% - 32px));
+    width: min(1160px, calc(100dvw - 32px));
     margin: 16px auto 0;
     padding: 10px 12px;
     border: 1px solid rgba(255, 255, 255, 0.72);
@@ -376,11 +379,75 @@ const engineRows = [
     box-shadow: inset 0 -10px 20px rgba(111, 167, 198, 0.2);
   }
 
-  .brand-mark img {
+  .mark-hook,
+  .mark-sun,
+  .mark-cloud,
+  .mark-cloud::before,
+  .mark-cloud::after {
     position: absolute;
-    width: 142px;
-    max-width: none;
-    transform: translate(11px, 11px);
+    display: block;
+  }
+
+  .mark-hook {
+    top: 8px;
+    left: 14px;
+    width: 20px;
+    height: 19px;
+    border: 3px solid var(--navy);
+    border-bottom: 0;
+    border-left-color: transparent;
+    border-radius: 50% 50% 0 0;
+    transform: rotate(12deg);
+  }
+
+  .mark-hook::before {
+    position: absolute;
+    top: 16px;
+    left: -8px;
+    width: 35px;
+    height: 17px;
+    border-top: 4px solid var(--navy);
+    border-radius: 50% 50% 0 0;
+    content: '';
+    transform: rotate(28deg);
+  }
+
+  .mark-sun {
+    right: 8px;
+    bottom: 13px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--sun);
+  }
+
+  .mark-cloud {
+    left: 7px;
+    bottom: 9px;
+    width: 29px;
+    height: 13px;
+    border-radius: 999px;
+    background: var(--sky);
+  }
+
+  .mark-cloud::before,
+  .mark-cloud::after {
+    bottom: 5px;
+    border-radius: 50%;
+    background: inherit;
+    content: '';
+  }
+
+  .mark-cloud::before {
+    left: 7px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .mark-cloud::after {
+    right: 3px;
+    width: 18px;
+    height: 18px;
   }
 
   .brand strong,
@@ -643,6 +710,7 @@ const engineRows = [
 
   .hero-copy {
     width: min(680px, 100%);
+    max-width: calc(100dvw - 48px);
     margin: auto auto auto max(6vw, 24px);
     padding-top: 8px;
   }
@@ -661,6 +729,7 @@ const engineRows = [
   h3,
   p {
     margin-top: 0;
+    overflow-wrap: break-word;
   }
 
   h1 {
@@ -676,6 +745,7 @@ const engineRows = [
     font-size: clamp(2rem, 4.6vw, 4.7rem);
     font-weight: 800;
     line-height: 0.98;
+    overflow-wrap: anywhere;
   }
 
   h3 {
@@ -961,7 +1031,9 @@ const engineRows = [
 
   .palette {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
+    max-width: 100%;
   }
 
   .palette span {
@@ -982,6 +1054,7 @@ const engineRows = [
 
   .section {
     width: min(1160px, calc(100% - 32px));
+    width: min(1160px, calc(100dvw - 32px));
     margin: 0 auto;
     padding: clamp(72px, 10vw, 128px) 0;
   }
@@ -1058,6 +1131,15 @@ const engineRows = [
 
   .daily-copy {
     max-width: 470px;
+  }
+
+  .daily-look > *,
+  .look-board,
+  .forecast-card,
+  .outfit-card,
+  .logic > * {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .look-board {
@@ -1158,6 +1240,10 @@ const engineRows = [
     border: 1px solid rgba(31, 42, 68, 0.08);
     border-radius: 8px;
     background: var(--paper);
+  }
+
+  .outfit-list article > * {
+    min-width: 0;
   }
 
   .outfit-list h3,
@@ -1319,6 +1405,7 @@ const engineRows = [
     justify-content: space-between;
     gap: 28px;
     width: min(1160px, calc(100% - 32px));
+    width: min(1160px, calc(100dvw - 32px));
     margin-bottom: 70px;
     padding: clamp(32px, 5vw, 56px);
     border: 1px solid rgba(31, 42, 68, 0.08);
@@ -1337,6 +1424,18 @@ const engineRows = [
   .api-band p {
     max-width: 680px;
     opacity: 0.78;
+  }
+
+  .api-band > *,
+  .daily-copy,
+  .logic-copy,
+  .hero-copy {
+    min-width: 0;
+  }
+
+  .api-band > * {
+    width: 100%;
+    max-width: 100%;
   }
 
   .api-band .button-primary {
@@ -1398,7 +1497,7 @@ const engineRows = [
 
     .daily-look,
     .logic {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .daily-copy {
@@ -1406,7 +1505,7 @@ const engineRows = [
     }
 
     .look-board {
-      grid-template-columns: 1fr 1.1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     }
 
     .closet-rail,
@@ -1442,11 +1541,11 @@ const engineRows = [
     }
 
     h1 {
-      font-size: clamp(4rem, 26vw, 7rem);
+      font-size: clamp(3.35rem, 22vw, 6rem);
     }
 
     h2 {
-      font-size: clamp(2rem, 12vw, 3.4rem);
+      font-size: clamp(1.7rem, 10vw, 3.1rem);
     }
 
     .hero-actions,
@@ -1458,7 +1557,7 @@ const engineRows = [
     .feature-grid,
     .look-board,
     .forecast-days {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .brand-strip,
@@ -1466,6 +1565,10 @@ const engineRows = [
     .site-footer {
       align-items: flex-start;
       flex-direction: column;
+    }
+
+    .api-band {
+      padding: 28px 22px;
     }
 
     .site-footer p {
@@ -1508,6 +1611,7 @@ const engineRows = [
 
     .phone-preview {
       min-width: 0;
+      max-width: calc(100dvw - 48px);
       padding: 16px;
     }
 
@@ -1523,6 +1627,16 @@ const engineRows = [
 
     .outfit-stack {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    .outfit-list article {
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 10px;
+      padding: 8px;
+    }
+
+    .item-icon {
+      min-height: 58px;
     }
   }
 
