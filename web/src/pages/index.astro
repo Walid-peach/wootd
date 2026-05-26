@@ -1,4 +1,41 @@
 ---
+const featureCards = [
+  {
+    eyebrow: 'Forecast first',
+    title: 'The sky gets a say',
+    text: 'Temperature, rain, wind, humidity, and UV all shape the outfit before the closet opens.',
+  },
+  {
+    eyebrow: 'Wardrobe aware',
+    title: 'Looks built from what you own',
+    text: 'WOOTD pairs tops, bottoms, layers, and accessories into a complete daily recommendation.',
+  },
+  {
+    eyebrow: 'Gets smarter',
+    title: 'Feedback trains the fit',
+    text: 'Ratings flow into the ML engine so the next suggestion feels a little more personal.',
+  },
+]
+
+const forecastDays = [
+  { day: 'Fri', high: '18', low: '13', tone: 'blue' },
+  { day: 'Sat', high: '20', low: '14', tone: 'cream' },
+  { day: 'Sun', high: '22', low: '15', tone: 'sun' },
+  { day: 'Mon', high: '19', low: '12', tone: 'cream' },
+]
+
+const outfitItems = [
+  { name: 'Light jacket', note: 'Cool morning layer', kind: 'jacket' },
+  { name: 'Soft tee', note: 'Breathable base', kind: 'tee' },
+  { name: 'Blue denim', note: 'Comfortable walk', kind: 'pants' },
+  { name: 'Low sneakers', note: 'Dry pavement ready', kind: 'shoes' },
+]
+
+const engineRows = [
+  { label: 'Rules engine', value: 'Instant, deterministic picks for launch' },
+  { label: 'ML engine', value: 'Learns from feedback and preferences' },
+  { label: 'Same API', value: 'Web now, mobile-ready later' },
+]
 ---
 
 <!doctype html>
@@ -6,10 +43,1497 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WOOTD — Dress smart. Every single day.</title>
+    <meta
+      name="description"
+      content="WOOTD turns daily weather forecasts into cute, practical outfit recommendations."
+    />
+    <meta name="theme-color" content="#DCE8F2" />
+    <title>WOOTD - Weather Outfit of the Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1>WOOTD</h1>
-    <p>Coming soon.</p>
+    <header class="site-header" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="WOOTD home">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="/assets/wootd-brand.png" alt="" />
+        </span>
+        <span>
+          <strong>WOOTD</strong>
+          <small>Weather Outfit of the Day</small>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="Landing page sections">
+        <a href="#closet">Closet</a>
+        <a href="#logic">Logic</a>
+        <a href="#api">API</a>
+      </nav>
+      <a class="nav-button" href="#closet">Preview</a>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-brand-board" src="/assets/wootd-brand.png" alt="" aria-hidden="true" />
+        <div class="weather-drawing" aria-hidden="true">
+          <div class="weather-line"></div>
+          <div class="sun-badge"></div>
+          <div class="cloud cloud-one"></div>
+          <div class="cloud cloud-two"></div>
+          <div class="closet-rail"></div>
+          <div class="hanging-look look-coat">
+            <span></span>
+          </div>
+          <div class="hanging-look look-shirt">
+            <span></span>
+          </div>
+          <div class="hanging-look look-pants">
+            <span></span>
+          </div>
+        </div>
+
+        <div class="hero-copy">
+          <p class="eyebrow">Weather Outfit of the Day</p>
+          <h1 id="hero-title">WOOTD</h1>
+          <p class="hero-lede">
+            A tiny morning stylist that checks the forecast, reads your wardrobe, and sends out a
+            look that makes sense before coffee.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button button-primary" href="#closet">See today's look</a>
+            <a class="button button-secondary" href="#logic">Meet the engines</a>
+          </div>
+          <dl class="hero-stats" aria-label="Product highlights">
+            <div>
+              <dt>2</dt>
+              <dd>recommendation engines</dd>
+            </div>
+            <div>
+              <dt>7</dt>
+              <dd>day forecast window</dd>
+            </div>
+            <div>
+              <dt>4</dt>
+              <dd>outfit categories</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="phone-preview" aria-label="WOOTD app preview">
+          <div class="phone-bar">
+            <span>9:41</span>
+            <span class="signal" aria-hidden="true"></span>
+          </div>
+          <div class="phone-topline">
+            <span>Paris, France</span>
+            <span class="bell" aria-hidden="true"></span>
+          </div>
+          <p class="phone-greeting">Good morning, Emma</p>
+          <h2>Today I wear</h2>
+          <div class="forecast-pill">
+            <div class="mini-weather" aria-hidden="true">
+              <span class="mini-sun"></span>
+              <span class="mini-cloud"></span>
+            </div>
+            <div>
+              <strong>18&deg;C</strong>
+              <span>Partly cloudy</span>
+            </div>
+            <div class="temp-range">
+              <span>21&deg;</span>
+              <span>13&deg;</span>
+            </div>
+          </div>
+          <div class="outfit-stack" aria-label="Recommended outfit">
+            <div class="mini-garment garment-jacket"></div>
+            <div class="mini-garment garment-shirt"></div>
+            <div class="mini-garment garment-jeans"></div>
+            <div class="mini-garment garment-shoe"></div>
+          </div>
+          <a class="why-link" href="#logic">Why this outfit?</a>
+        </div>
+      </section>
+
+      <section class="brand-strip" aria-label="Brand palette">
+        <div class="palette">
+          <span style="--swatch: #1f2a44"></span>
+          <span style="--swatch: #6fa7c6"></span>
+          <span style="--swatch: #dce8f2"></span>
+          <span style="--swatch: #ffc857"></span>
+          <span style="--swatch: #f7c5b5"></span>
+        </div>
+        <p>Smart, stylish, personal, and just soft enough for a daily habit.</p>
+      </section>
+
+      <section class="section intro" id="closet" aria-labelledby="closet-title">
+        <div class="section-heading">
+          <p class="eyebrow">Morning ritual</p>
+          <h2 id="closet-title">Open the app. Skip the outfit spiral.</h2>
+        </div>
+        <div class="feature-grid">
+          {
+            featureCards.map((card) => (
+              <article class="feature-card">
+                <p>{card.eyebrow}</p>
+                <h3>{card.title}</h3>
+                <span aria-hidden="true" />
+                <p>{card.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="section daily-look" aria-labelledby="daily-title">
+        <div class="daily-copy">
+          <p class="eyebrow">A look with reasons</p>
+          <h2 id="daily-title">Cute is better when it knows about wind.</h2>
+          <p>
+            The recommendation is not a single item. It is a whole little outfit: layer, base,
+            bottom, shoes, and the tiny accessories weather loves to surprise people with.
+          </p>
+        </div>
+
+        <div class="look-board">
+          <div class="forecast-card" aria-label="Weekly forecast sample">
+            <div class="card-heading">
+              <strong>This week</strong>
+              <span>Paris</span>
+            </div>
+            <div class="forecast-days">
+              {
+                forecastDays.map((day) => (
+                  <div class:list={['day-card', `day-${day.tone}`]}>
+                    <span>{day.day}</span>
+                    <strong>{day.high}&deg;</strong>
+                    <small>{day.low}&deg;</small>
+                    <i aria-hidden="true" />
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="outfit-card" aria-label="Outfit reasoning sample">
+            <div class="card-heading">
+              <strong>Why this outfit?</strong>
+              <span>4 pieces</span>
+            </div>
+            <div class="outfit-list">
+              {
+                outfitItems.map((item) => (
+                  <article>
+                    <div class:list={['item-icon', item.kind]} aria-hidden="true" />
+                    <div>
+                      <h3>{item.name}</h3>
+                      <p>{item.note}</p>
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section logic" id="logic" aria-labelledby="logic-title">
+        <div class="logic-visual" aria-hidden="true">
+          <div class="data-drop drop-one"></div>
+          <div class="data-drop drop-two"></div>
+          <div class="logic-track">
+            <span>Open-Meteo</span>
+            <span>R2 Lakehouse</span>
+            <span>FastAPI</span>
+            <span>Astro</span>
+          </div>
+        </div>
+        <div class="logic-copy">
+          <p class="eyebrow">Under the hood</p>
+          <h2 id="logic-title">Soft on the outside. Serious about the forecast.</h2>
+          <p>
+            WOOTD starts with deterministic weather bands, then layers in a LightGBM model trained
+            on user feedback. The cute surface sits on top of a practical data pipeline.
+          </p>
+          <div class="engine-list">
+            {
+              engineRows.map((row) => (
+                <div>
+                  <strong>{row.label}</strong>
+                  <span>{row.value}</span>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="section api-band" id="api" aria-labelledby="api-title">
+        <div>
+          <p class="eyebrow">Built to travel</p>
+          <h2 id="api-title">One recommendation API, many morning mirrors.</h2>
+          <p>
+            The same FastAPI surface powers the web app now and gives the future SwiftUI app the
+            same city, forecast, engine, and feedback flow.
+          </p>
+        </div>
+        <a class="button button-primary" href="http://localhost:8000/docs">View API docs</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>WOOTD</span>
+      <p>Weather-smart outfit picks for people who dress for the day they actually have.</p>
+    </footer>
   </body>
 </html>
+
+<style>
+  :root {
+    color-scheme: light;
+    --navy: #1f2a44;
+    --sky: #6fa7c6;
+    --mist: #dce8f2;
+    --sun: #ffc857;
+    --blush: #f7c5b5;
+    --cream: #fff8ef;
+    --paper: #fffdf9;
+    --ink-soft: #536174;
+    --line: rgba(31, 42, 68, 0.13);
+    --shadow: 0 20px 60px rgba(31, 42, 68, 0.14);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, rgba(220, 232, 242, 0.55), transparent 440px), var(--paper);
+    color: var(--navy);
+    font-family:
+      'Poppins',
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+    line-height: 1.5;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: min(1160px, calc(100% - 32px));
+    margin: 16px auto 0;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 8px;
+    background: rgba(255, 253, 249, 0.82);
+    box-shadow: 0 12px 32px rgba(31, 42, 68, 0.08);
+    backdrop-filter: blur(18px);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    position: relative;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    overflow: hidden;
+    place-items: center;
+    border: 1px solid rgba(31, 42, 68, 0.09);
+    border-radius: 8px;
+    background: var(--cream);
+    box-shadow: inset 0 -10px 20px rgba(111, 167, 198, 0.2);
+  }
+
+  .brand-mark img {
+    position: absolute;
+    width: 142px;
+    max-width: none;
+    transform: translate(11px, 11px);
+  }
+
+  .brand strong,
+  .site-footer span {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+
+  .brand small {
+    display: block;
+    margin-top: -3px;
+    color: var(--ink-soft);
+    font-size: 0.66rem;
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(31, 42, 68, 0.76);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .nav-links a,
+  .nav-button,
+  .button {
+    border-radius: 8px;
+    transition:
+      transform 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .nav-links a {
+    padding: 9px 12px;
+  }
+
+  .nav-links a:hover {
+    background: rgba(220, 232, 242, 0.65);
+    color: var(--navy);
+  }
+
+  .nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 16px;
+    background: var(--navy);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .nav-button:hover,
+  .button:hover {
+    transform: translateY(-2px);
+  }
+
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    min-height: 86svh;
+    overflow: hidden;
+    padding: clamp(54px, 8vw, 104px) 24px 72px;
+    border-bottom: 1px solid rgba(31, 42, 68, 0.08);
+    background:
+      radial-gradient(circle at 52% 22%, rgba(255, 200, 87, 0.36), transparent 18%),
+      linear-gradient(135deg, rgba(255, 248, 239, 0.96) 0%, rgba(220, 232, 242, 0.9) 100%);
+  }
+
+  .hero::after {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: -1;
+    height: 36%;
+    background:
+      linear-gradient(90deg, rgba(247, 197, 181, 0.28), transparent 32%),
+      linear-gradient(180deg, transparent, rgba(255, 253, 249, 0.92));
+    content: '';
+  }
+
+  .hero-brand-board {
+    position: absolute;
+    right: max(-10vw, -130px);
+    bottom: max(-18vw, -180px);
+    z-index: -1;
+    width: min(76vw, 820px);
+    opacity: 0.2;
+    filter: saturate(1.08);
+  }
+
+  .weather-drawing {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .weather-line {
+    position: absolute;
+    top: 26%;
+    left: 12%;
+    width: 19vw;
+    min-width: 180px;
+    height: 4px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(31, 42, 68, 0.3), transparent);
+    transform: rotate(-8deg);
+  }
+
+  .sun-badge {
+    position: absolute;
+    top: 16%;
+    right: 25%;
+    width: clamp(94px, 12vw, 150px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--sun);
+    box-shadow:
+      0 0 0 18px rgba(255, 200, 87, 0.15),
+      0 20px 45px rgba(255, 200, 87, 0.32);
+  }
+
+  .sun-badge::before,
+  .sun-badge::after {
+    position: absolute;
+    inset: -24px;
+    border: 4px solid transparent;
+    border-top-color: rgba(255, 200, 87, 0.72);
+    border-bottom-color: rgba(255, 200, 87, 0.72);
+    border-radius: inherit;
+    content: '';
+  }
+
+  .sun-badge::after {
+    transform: rotate(48deg);
+  }
+
+  .cloud {
+    position: absolute;
+    height: 52px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #9cc6dc, var(--sky));
+    box-shadow: 0 18px 40px rgba(111, 167, 198, 0.22);
+  }
+
+  .cloud::before,
+  .cloud::after {
+    position: absolute;
+    bottom: 14px;
+    border-radius: 50%;
+    background: inherit;
+    content: '';
+  }
+
+  .cloud::before {
+    left: 22px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .cloud::after {
+    right: 38px;
+    width: 96px;
+    height: 96px;
+  }
+
+  .cloud-one {
+    top: 27%;
+    right: 13%;
+    width: clamp(230px, 25vw, 330px);
+  }
+
+  .cloud-two {
+    bottom: 19%;
+    left: 8%;
+    width: clamp(190px, 22vw, 280px);
+    opacity: 0.45;
+    transform: scaleX(-1);
+  }
+
+  .closet-rail {
+    position: absolute;
+    right: 11%;
+    bottom: 19%;
+    width: min(520px, 42vw);
+    min-width: 270px;
+    height: 9px;
+    border-radius: 999px;
+    background: rgba(31, 42, 68, 0.82);
+    box-shadow: 0 16px 28px rgba(31, 42, 68, 0.1);
+  }
+
+  .hanging-look {
+    position: absolute;
+    bottom: 6%;
+    width: 92px;
+    height: 150px;
+    transform-origin: top center;
+    animation: sway 4.6s ease-in-out infinite;
+  }
+
+  .hanging-look::before {
+    position: absolute;
+    top: -62px;
+    left: 42px;
+    width: 30px;
+    height: 52px;
+    border: 4px solid var(--navy);
+    border-bottom: 0;
+    border-left-color: transparent;
+    border-radius: 50% 50% 0 0;
+    content: '';
+    transform: rotate(26deg);
+  }
+
+  .hanging-look span {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 86px;
+    height: 116px;
+    border: 1px solid rgba(31, 42, 68, 0.12);
+    border-radius: 8px 8px 22px 22px;
+    background: var(--cream);
+    box-shadow: 0 16px 40px rgba(31, 42, 68, 0.13);
+    transform: translateX(-50%);
+  }
+
+  .look-coat {
+    right: 37%;
+  }
+
+  .look-shirt {
+    right: 27%;
+    animation-delay: -1.2s;
+  }
+
+  .look-shirt span {
+    height: 92px;
+    background: white;
+  }
+
+  .look-pants {
+    right: 18%;
+    animation-delay: -2.1s;
+  }
+
+  .look-pants span {
+    height: 124px;
+    background: #92bfd8;
+  }
+
+  .hero-copy {
+    width: min(680px, 100%);
+    margin: auto auto auto max(6vw, 24px);
+    padding-top: 8px;
+  }
+
+  .eyebrow {
+    margin: 0 0 12px;
+    color: var(--sky);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin-top: 0;
+  }
+
+  h1 {
+    max-width: 9ch;
+    margin-bottom: 12px;
+    font-size: clamp(4.6rem, 15vw, 12rem);
+    font-weight: 800;
+    line-height: 0.86;
+  }
+
+  h2 {
+    color: var(--navy);
+    font-size: clamp(2rem, 4.6vw, 4.7rem);
+    font-weight: 800;
+    line-height: 0.98;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  .hero-lede {
+    max-width: 610px;
+    margin-bottom: 28px;
+    color: rgba(31, 42, 68, 0.78);
+    font-size: clamp(1.05rem, 2.1vw, 1.45rem);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 34px;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 20px;
+    border: 1px solid transparent;
+    font-weight: 800;
+  }
+
+  .button-primary {
+    background: var(--navy);
+    color: white;
+    box-shadow: 0 16px 26px rgba(31, 42, 68, 0.18);
+  }
+
+  .button-secondary {
+    border-color: rgba(31, 42, 68, 0.15);
+    background: rgba(255, 253, 249, 0.62);
+    color: var(--navy);
+  }
+
+  .button-secondary:hover {
+    background: white;
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 560px;
+    margin: 0;
+    padding: 0;
+    gap: 10px;
+  }
+
+  .hero-stats div {
+    padding: 13px 14px;
+    border: 1px solid rgba(31, 42, 68, 0.11);
+    border-radius: 8px;
+    background: rgba(255, 253, 249, 0.62);
+  }
+
+  .hero-stats dt {
+    font-size: 1.35rem;
+    font-weight: 800;
+  }
+
+  .hero-stats dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+  }
+
+  .phone-preview {
+    position: absolute;
+    right: clamp(28px, 7vw, 120px);
+    top: 27%;
+    width: min(320px, 30vw);
+    min-width: 260px;
+    padding: 20px;
+    border: 1px solid rgba(31, 42, 68, 0.1);
+    border-radius: 30px;
+    background: rgba(255, 253, 249, 0.88);
+    box-shadow: var(--shadow);
+    transform: rotate(2deg);
+  }
+
+  .phone-bar,
+  .phone-topline,
+  .card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .phone-bar {
+    margin-bottom: 22px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .signal,
+  .bell {
+    display: inline-block;
+    position: relative;
+  }
+
+  .signal {
+    width: 26px;
+    height: 12px;
+    border-top: 3px solid var(--navy);
+    border-right: 3px solid var(--navy);
+    border-radius: 2px;
+  }
+
+  .bell {
+    width: 16px;
+    height: 18px;
+    border: 2px solid var(--navy);
+    border-bottom-width: 3px;
+    border-radius: 8px 8px 4px 4px;
+  }
+
+  .phone-topline {
+    color: rgba(31, 42, 68, 0.72);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .phone-greeting {
+    margin: 24px 0 4px;
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+  }
+
+  .phone-preview h2 {
+    margin-bottom: 18px;
+    font-size: 1.55rem;
+    line-height: 1.1;
+  }
+
+  .forecast-pill {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 13px;
+    padding: 13px;
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(220, 232, 242, 0.9), rgba(255, 248, 239, 0.9));
+  }
+
+  .mini-weather {
+    position: relative;
+    width: 58px;
+    height: 44px;
+  }
+
+  .mini-sun {
+    position: absolute;
+    right: 6px;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--sun);
+  }
+
+  .mini-cloud {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    width: 46px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--sky);
+  }
+
+  .mini-cloud::before {
+    position: absolute;
+    left: 12px;
+    bottom: 7px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: inherit;
+    content: '';
+  }
+
+  .forecast-pill strong {
+    display: block;
+    font-size: 1.2rem;
+  }
+
+  .forecast-pill span {
+    color: var(--ink-soft);
+    font-size: 0.74rem;
+  }
+
+  .temp-range {
+    display: grid;
+    gap: 2px;
+    justify-items: end;
+  }
+
+  .outfit-stack {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 14px 0;
+  }
+
+  .mini-garment {
+    position: relative;
+    min-height: 82px;
+    border: 1px solid rgba(31, 42, 68, 0.09);
+    border-radius: 8px;
+    background: rgba(255, 248, 239, 0.82);
+  }
+
+  .mini-garment::before,
+  .mini-garment::after {
+    position: absolute;
+    content: '';
+  }
+
+  .garment-jacket::before {
+    inset: 19px 15px 12px;
+    border-radius: 7px 7px 13px 13px;
+    background: #e4d5bd;
+  }
+
+  .garment-shirt::before {
+    inset: 22px 17px 18px;
+    border-radius: 8px 8px 16px 16px;
+    background: white;
+  }
+
+  .garment-jeans::before {
+    inset: 18px 18px 10px;
+    border-radius: 7px;
+    background: #75a8c6;
+  }
+
+  .garment-shoe::before {
+    right: 12px;
+    bottom: 18px;
+    width: 42px;
+    height: 18px;
+    border-radius: 18px 22px 8px 8px;
+    background: white;
+    box-shadow: -18px 8px 0 #eadfce;
+  }
+
+  .why-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: white;
+    color: var(--navy);
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+
+  .why-link::after {
+    content: '>';
+  }
+
+  .brand-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    min-height: 108px;
+    padding: 24px;
+    border-bottom: 1px solid rgba(31, 42, 68, 0.08);
+    background: var(--paper);
+  }
+
+  .palette {
+    display: flex;
+    gap: 10px;
+  }
+
+  .palette span {
+    width: 34px;
+    aspect-ratio: 1;
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 50%;
+    background: var(--swatch);
+    box-shadow: 0 8px 20px rgba(31, 42, 68, 0.08);
+  }
+
+  .brand-strip p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .section {
+    width: min(1160px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: clamp(72px, 10vw, 128px) 0;
+  }
+
+  .section-heading {
+    max-width: 790px;
+    margin-bottom: 36px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .feature-card,
+  .forecast-card,
+  .outfit-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 18px 40px rgba(31, 42, 68, 0.07);
+  }
+
+  .feature-card {
+    position: relative;
+    min-height: 260px;
+    overflow: hidden;
+    padding: 26px;
+  }
+
+  .feature-card::after {
+    position: absolute;
+    right: -36px;
+    bottom: -34px;
+    width: 140px;
+    height: 140px;
+    border: 22px solid rgba(111, 167, 198, 0.16);
+    border-radius: 50%;
+    content: '';
+  }
+
+  .feature-card p:first-child {
+    color: var(--sky);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .feature-card span {
+    display: block;
+    width: 54px;
+    height: 6px;
+    margin: 20px 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--sun), var(--blush), var(--sky));
+  }
+
+  .feature-card p:last-child,
+  .daily-copy p,
+  .logic-copy p,
+  .api-band p,
+  .site-footer p {
+    color: var(--ink-soft);
+  }
+
+  .daily-look {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(520px, 1fr);
+    align-items: center;
+    gap: clamp(36px, 7vw, 92px);
+  }
+
+  .daily-copy {
+    max-width: 470px;
+  }
+
+  .look-board {
+    display: grid;
+    grid-template-columns: 0.82fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .forecast-card,
+  .outfit-card {
+    padding: 20px;
+  }
+
+  .card-heading {
+    margin-bottom: 18px;
+  }
+
+  .card-heading span {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .forecast-days {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .day-card {
+    position: relative;
+    display: grid;
+    min-height: 138px;
+    overflow: hidden;
+    padding: 14px;
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 8px;
+    background: var(--cream);
+  }
+
+  .day-blue {
+    background: #eaf5fb;
+  }
+
+  .day-sun {
+    background: #fff2cc;
+  }
+
+  .day-card span {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .day-card strong {
+    align-self: end;
+    font-size: 1.65rem;
+  }
+
+  .day-card small {
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  .day-card i {
+    position: absolute;
+    right: -16px;
+    bottom: -14px;
+    width: 76px;
+    height: 46px;
+    border-radius: 999px;
+    background: var(--sky);
+  }
+
+  .day-card i::before {
+    position: absolute;
+    left: 12px;
+    bottom: 17px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: inherit;
+    content: '';
+  }
+
+  .outfit-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .outfit-list article {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 14px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 8px;
+    background: var(--paper);
+  }
+
+  .outfit-list h3,
+  .outfit-list p {
+    margin: 0;
+  }
+
+  .outfit-list p {
+    color: var(--ink-soft);
+    font-size: 0.83rem;
+  }
+
+  .item-icon {
+    position: relative;
+    min-height: 68px;
+    border-radius: 8px;
+    background: var(--cream);
+  }
+
+  .item-icon::before,
+  .item-icon::after {
+    position: absolute;
+    content: '';
+  }
+
+  .jacket::before {
+    inset: 13px 18px 7px;
+    border-radius: 7px 7px 13px 13px;
+    background: #dcc6a9;
+  }
+
+  .tee::before {
+    inset: 18px 18px 13px;
+    border-radius: 8px 8px 16px 16px;
+    background: white;
+  }
+
+  .pants::before {
+    inset: 10px 20px 7px;
+    border-radius: 6px;
+    background: var(--sky);
+  }
+
+  .shoes::before {
+    right: 13px;
+    bottom: 17px;
+    width: 40px;
+    height: 18px;
+    border-radius: 18px 22px 8px 8px;
+    background: white;
+    box-shadow: -18px 8px 0 #eadfce;
+  }
+
+  .logic {
+    display: grid;
+    grid-template-columns: minmax(430px, 1fr) minmax(0, 0.9fr);
+    gap: clamp(36px, 8vw, 96px);
+    align-items: center;
+  }
+
+  .logic-visual {
+    position: relative;
+    min-height: 470px;
+    overflow: hidden;
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 8px;
+    background:
+      linear-gradient(135deg, rgba(220, 232, 242, 0.86), rgba(255, 248, 239, 0.95)),
+      linear-gradient(180deg, white, var(--mist));
+    box-shadow: 0 18px 45px rgba(31, 42, 68, 0.08);
+  }
+
+  .logic-visual::before {
+    position: absolute;
+    top: 48px;
+    left: 50%;
+    width: 160px;
+    height: 120px;
+    border: 8px solid var(--navy);
+    border-bottom: 0;
+    border-radius: 84px 84px 0 0;
+    content: '';
+    transform: translateX(-50%);
+  }
+
+  .logic-visual::after {
+    position: absolute;
+    top: 132px;
+    left: 50%;
+    width: 290px;
+    height: 78px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #a9d0e3, var(--sky));
+    box-shadow: 0 16px 40px rgba(111, 167, 198, 0.26);
+    content: '';
+    transform: translateX(-50%);
+  }
+
+  .data-drop {
+    position: absolute;
+    width: 74px;
+    height: 74px;
+    border-radius: 50% 50% 50% 12px;
+    background: var(--sun);
+    box-shadow: 0 18px 35px rgba(255, 200, 87, 0.26);
+    transform: rotate(-45deg);
+  }
+
+  .drop-one {
+    right: 84px;
+    top: 72px;
+  }
+
+  .drop-two {
+    left: 70px;
+    bottom: 74px;
+    background: var(--blush);
+  }
+
+  .logic-track {
+    position: absolute;
+    inset: auto 28px 28px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .logic-track span {
+    padding: 14px 16px;
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 253, 249, 0.82);
+    color: var(--navy);
+    font-weight: 800;
+  }
+
+  .engine-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .engine-list div {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 18px;
+    padding: 16px;
+    border: 1px solid rgba(31, 42, 68, 0.1);
+    border-radius: 8px;
+    background: white;
+  }
+
+  .engine-list span {
+    color: var(--ink-soft);
+  }
+
+  .api-band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    width: min(1160px, calc(100% - 32px));
+    margin-bottom: 70px;
+    padding: clamp(32px, 5vw, 56px);
+    border: 1px solid rgba(31, 42, 68, 0.08);
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(31, 42, 68, 0.92), rgba(31, 42, 68, 0.75)), var(--navy);
+    color: white;
+    box-shadow: var(--shadow);
+  }
+
+  .api-band h2,
+  .api-band p,
+  .api-band .eyebrow {
+    color: white;
+  }
+
+  .api-band p {
+    max-width: 680px;
+    opacity: 0.78;
+  }
+
+  .api-band .button-primary {
+    flex: 0 0 auto;
+    background: var(--sun);
+    color: var(--navy);
+    box-shadow: none;
+  }
+
+  .site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px max(24px, calc((100vw - 1160px) / 2));
+    border-top: 1px solid rgba(31, 42, 68, 0.08);
+    background: var(--paper);
+  }
+
+  .site-footer p {
+    max-width: 620px;
+    margin: 0;
+    text-align: right;
+  }
+
+  @keyframes sway {
+    0%,
+    100% {
+      transform: rotate(-2deg);
+    }
+
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+
+  @media (max-width: 1040px) {
+    .phone-preview {
+      position: relative;
+      top: auto;
+      right: auto;
+      width: min(360px, 100%);
+      margin: 36px auto 0;
+      transform: rotate(0deg);
+    }
+
+    .hero-copy {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .hero-actions {
+      justify-content: center;
+    }
+
+    .hero-stats {
+      margin-inline: auto;
+    }
+
+    .daily-look,
+    .logic {
+      grid-template-columns: 1fr;
+    }
+
+    .daily-copy {
+      max-width: 720px;
+    }
+
+    .look-board {
+      grid-template-columns: 1fr 1.1fr;
+    }
+
+    .closet-rail,
+    .hanging-look {
+      opacity: 0.28;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .site-header {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      flex: 1 1 auto;
+    }
+
+    .nav-links {
+      order: 3;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .nav-links a {
+      flex: 1;
+      text-align: center;
+    }
+
+    .hero {
+      min-height: auto;
+      padding-top: 46px;
+    }
+
+    h1 {
+      font-size: clamp(4rem, 26vw, 7rem);
+    }
+
+    h2 {
+      font-size: clamp(2rem, 12vw, 3.4rem);
+    }
+
+    .hero-actions,
+    .button {
+      width: 100%;
+    }
+
+    .hero-stats,
+    .feature-grid,
+    .look-board,
+    .forecast-days {
+      grid-template-columns: 1fr;
+    }
+
+    .brand-strip,
+    .api-band,
+    .site-footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .site-footer p {
+      text-align: left;
+    }
+
+    .logic-visual {
+      min-height: 390px;
+    }
+
+    .engine-list div {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .sun-badge {
+      right: -18px;
+      top: 22%;
+    }
+
+    .cloud-one {
+      right: -80px;
+      opacity: 0.55;
+    }
+
+    .cloud-two {
+      left: -80px;
+    }
+  }
+
+  @media (max-width: 440px) {
+    .brand small,
+    .nav-button {
+      display: none;
+    }
+
+    .hero-stats div {
+      padding: 12px;
+    }
+
+    .phone-preview {
+      min-width: 0;
+      padding: 16px;
+    }
+
+    .forecast-pill {
+      grid-template-columns: auto 1fr;
+    }
+
+    .temp-range {
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(2, 1fr);
+      justify-items: start;
+    }
+
+    .outfit-stack {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+</style>
