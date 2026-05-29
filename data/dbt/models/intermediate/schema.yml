@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: int_weather_observations_unioned
+    description: Shared weather forecast columns from all providers.
+
+  - name: int_daily_city_forecasts
+    description: Daily forecast metrics aggregated per provider, city, and forecast date.
+    columns:
+      - name: city_name
+        tests:
+          - not_null
+      - name: forecast_date
+        tests:
+          - not_null
+
+  - name: int_weather_observations_deduped
+    description: One preferred provider forecast per city and forecast date.
+    columns:
+      - name: city_name
+        tests:
+          - not_null
+      - name: forecast_date
+        tests:
+          - not_null
+      - name: temp_min_c
+        tests:
+          - not_null
+      - name: temp_max_c
+        tests:
+          - not_null

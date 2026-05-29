@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: dim_city
+    description: City dimension used by ingestion, forecasts, API lookups, and analytics.
+    columns:
+      - name: city_id
+        tests:
+          - not_null
+          - unique
+      - name: city_name
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_daily_forecast
+    description: One API-ready daily weather forecast row per city and forecast date.
+    columns:
+      - name: daily_forecast_id
+        tests:
+          - not_null
+          - unique
+      - name: city_name
+        tests:
+          - not_null
+      - name: forecast_date
+        tests:
+          - not_null
+      - name: temp_min_c
+        tests:
+          - not_null
+      - name: temp_max_c
+        tests:
+          - not_null
+      - name: precip_probability
+        tests:
+          - not_null
+
+  - name: fct_recommendation_features
+    description: Feature table for future ML and recommendation analytics.
+    columns:
+      - name: daily_forecast_id
+        tests:
+          - not_null
+          - unique
+      - name: temperature_band
+        tests:
+          - accepted_values:
+              values: ['cold', 'mild', 'warm', 'hot']

@@ -11,14 +11,21 @@ analysis-paths: ["analyses"]
 macro-paths: ["macros"]
 
 target-path: "target"
-clean-targets: ["target", "dbt_packages"]
+clean-targets: ["target", "dbt_packages", "logs"]
 
 models:
   wootd:
-    bronze:
-      +materialized: external
-      +external_location: "s3://{{ env_var('R2_BUCKET_NAME') }}/bronze/{name}/**/*.parquet"
-    silver:
+    staging:
+      +schema: STAGING
+      +materialized: view
+    intermediate:
+      +schema: INTERMEDIATE
       +materialized: table
-    gold:
+    marts:
+      +schema: MARTS
       +materialized: table
+
+seeds:
+  wootd:
+    +schema: RAW
+    +quote_columns: false

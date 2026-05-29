@@ -1,0 +1,8 @@
+city_name,country,latitude,longitude,is_active
+Paris,France,48.8566,2.3522,true
+London,United Kingdom,51.5074,-0.1278,true
+New York,United States,40.7128,-74.006,true
+Tokyo,Japan,35.6762,139.6503,true
+Sydney,Australia,-33.8688,151.2093,true
+Chicago,United States,41.8781,-87.6298,false
+Los Angeles,United States,34.0522,-118.2437,false

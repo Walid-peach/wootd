@@ -1,1 +1,11 @@
-Astro frontend — static landing page and /app recommender UI. Deployed to Cloudflare Pages.
+# Web
+
+Astro frontend for WOOTD.
+
+Current status: minimal landing page. The recommendation UI will call the FastAPI service, which reads from Snowflake marts.
+
+Run locally:
+
+```bash
+make web-dev
+```
