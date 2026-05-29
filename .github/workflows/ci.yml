@@ -36,8 +36,8 @@ jobs:
       - name: Prettier check
         run: cd web && npx prettier --check src/
 
-  test-python:
-    name: Test (Python)
+  test-api:
+    name: Test (API)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,8 +50,25 @@ jobs:
       - name: Install deps
         run: uv sync --all-packages
 
-      - name: Pytest
-        run: uv run pytest api/tests/ data/tests/ -v
+      - name: Pytest API
+        run: uv run pytest api/tests/ -v
+
+  test-data:
+    name: Test (Data)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v3
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Install deps
+        run: uv sync --all-packages
+
+      - name: Pytest data
+        run: uv run pytest data/tests/ -v
 
   test-web:
     name: Test (Web)

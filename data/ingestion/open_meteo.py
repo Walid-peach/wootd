@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any, TypedDict, cast
+
 import requests
 
 from ingestion.common import configured_cities, utc_now
@@ -12,7 +14,14 @@ from ingestion.snowflake_loader import (
     record_ingestion_run,
 )
 
-CITY_COORDINATES: dict[str, dict[str, float | str]] = {
+
+class CityConfig(TypedDict):
+    name: str
+    lat: float
+    lon: float
+
+
+CITY_COORDINATES: dict[str, CityConfig] = {
     "Paris": {"name": "Paris", "lat": 48.8566, "lon": 2.3522},
     "London": {"name": "London", "lat": 51.5074, "lon": -0.1278},
     "New York": {"name": "New York", "lat": 40.7128, "lon": -74.0060},
@@ -21,7 +30,7 @@ CITY_COORDINATES: dict[str, dict[str, float | str]] = {
 }
 
 API_URL = "https://api.open-meteo.com/v1/forecast"
-PARAMS = {
+PARAMS: dict[str, int | str] = {
     "hourly": "temperature_2m,precipitation_probability,wind_speed_10m,uv_index",
     "daily": (
         "temperature_2m_max,temperature_2m_min,"
@@ -32,24 +41,29 @@ PARAMS = {
 }
 
 
-def selected_cities() -> list[dict[str, float | str]]:
+def selected_cities() -> list[CityConfig]:
     configured = set(configured_cities())
     return [city for name, city in CITY_COORDINATES.items() if name in configured]
 
 
-def fetch(city: dict[str, float | str]) -> dict:
+def fetch(city: CityConfig) -> dict[str, Any]:
+    params: dict[str, float | int | str] = {
+        **PARAMS,
+        "latitude": city["lat"],
+        "longitude": city["lon"],
+    }
     response = requests.get(
         API_URL,
-        params={**PARAMS, "latitude": city["lat"], "longitude": city["lon"]},
+        params=params,
         timeout=30,
     )
     response.raise_for_status()
-    return response.json()
+    return cast(dict[str, Any], response.json())
 
 
-def build_rows() -> list[dict]:
+def build_rows() -> list[dict[str, Any]]:
     ingested_at = utc_now()
-    rows: list[dict] = []
+    rows: list[dict[str, Any]] = []
 
     for city in selected_cities():
         rows.append(

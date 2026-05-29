@@ -40,10 +40,9 @@ def fetch_daily_forecast(city: str, forecast_date: date) -> dict[str, Any] | Non
         LIMIT 1
     """
 
-    with get_snowflake_connection() as conn:
-        with conn.cursor(DictCursor) as cur:
-            cur.execute(query, (city, forecast_date))
-            return cast(dict[str, Any] | None, cur.fetchone())
+    with get_snowflake_connection() as conn, conn.cursor(DictCursor) as cur:
+        cur.execute(query, (city, forecast_date))
+        return cast(dict[str, Any] | None, cur.fetchone())
 
 
 def insert_feedback(recommendation_id: str, rating: int, notes: str) -> None:
@@ -56,6 +55,5 @@ def insert_feedback(recommendation_id: str, rating: int, notes: str) -> None:
         VALUES (%s, %s, %s)
     """
 
-    with get_snowflake_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(query, (recommendation_id, rating, notes))
+    with get_snowflake_connection() as conn, conn.cursor() as cur:
+        cur.execute(query, (recommendation_id, rating, notes))

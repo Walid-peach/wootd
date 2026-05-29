@@ -8,12 +8,12 @@ ranked as (
         row_number() over (
             partition by lower(city_name), forecast_date
             order by
-                latest_ingested_at desc,
                 case provider
                     when 'open_meteo' then 1
                     when 'noaa' then 2
                     else 99
-                end
+                end,
+                latest_ingested_at desc
         ) as provider_rank
     from daily
 )

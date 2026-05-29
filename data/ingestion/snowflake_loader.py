@@ -12,7 +12,6 @@ from typing import Any
 import snowflake.connector
 from snowflake.connector import SnowflakeConnection
 
-
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
