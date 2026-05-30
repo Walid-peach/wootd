@@ -44,6 +44,18 @@ def ensure_raw_tables(conn: SnowflakeConnection) -> None:
     statements = [
         f"CREATE SCHEMA IF NOT EXISTS {schema}",
         f"""
+        CREATE TABLE IF NOT EXISTS {schema}.WEATHER_FORECAST_PAYLOADS (
+            INGESTION_ID STRING DEFAULT UUID_STRING(),
+            PROVIDER STRING NOT NULL,
+            CITY_NAME STRING NOT NULL,
+            COUNTRY STRING NOT NULL,
+            LATITUDE FLOAT,
+            LONGITUDE FLOAT,
+            INGESTED_AT TIMESTAMP_TZ NOT NULL,
+            PAYLOAD VARIANT NOT NULL
+        )
+        """,
+        f"""
         CREATE TABLE IF NOT EXISTS {schema}.OPEN_METEO_FORECASTS (
             INGESTION_ID STRING DEFAULT UUID_STRING(),
             PROVIDER STRING NOT NULL,
@@ -88,6 +100,41 @@ def ensure_raw_tables(conn: SnowflakeConnection) -> None:
     with conn.cursor() as cur:
         for statement in statements:
             cur.execute(statement)
+
+
+def load_weather_payload_rows(conn: SnowflakeConnection, rows: Iterable[dict[str, Any]]) -> int:
+    schema = raw_schema()
+    rows_loaded = 0
+    insert_sql = f"""
+        INSERT INTO {schema}.WEATHER_FORECAST_PAYLOADS (
+            PROVIDER,
+            CITY_NAME,
+            COUNTRY,
+            LATITUDE,
+            LONGITUDE,
+            INGESTED_AT,
+            PAYLOAD
+        )
+        SELECT %s, %s, %s, %s, %s, %s, PARSE_JSON(%s)
+    """
+
+    with conn.cursor() as cur:
+        for row in rows:
+            cur.execute(
+                insert_sql,
+                (
+                    row["provider"],
+                    row["city_name"],
+                    row["country"],
+                    row["latitude"],
+                    row["longitude"],
+                    row["ingested_at"],
+                    json.dumps(row["payload"]),
+                ),
+            )
+            rows_loaded += 1
+
+    return rows_loaded
 
 
 def load_open_meteo_rows(conn: SnowflakeConnection, rows: Iterable[dict[str, Any]]) -> int:

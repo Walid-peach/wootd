@@ -10,7 +10,7 @@ ranked as (
             order by
                 case provider
                     when 'open_meteo' then 1
-                    when 'noaa' then 2
+                    when 'weatherapi' then 2
                     else 99
                 end,
                 latest_ingested_at desc

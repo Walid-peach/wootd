@@ -28,4 +28,4 @@ select
     wind_kmh,
     uv_index,
     condition
-from {{ ref('stg_noaa_forecasts') }}
+from {{ ref('stg_weatherapi_forecasts') }}

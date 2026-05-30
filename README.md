@@ -47,12 +47,13 @@ Raw data is loaded directly from providers with minimal transformation.
 
 Tables:
 
-- `RAW.OPEN_METEO_FORECASTS`
-- `RAW.NOAA_FORECASTS`
+- `RAW.WEATHER_FORECAST_PAYLOADS`
 - `RAW.USER_FEEDBACK`
 - `RAW.INGESTION_RUNS`
 
 RAW is the replayable source of truth. If dbt logic changes, the project can rebuild downstream models from these raw tables.
+
+The active weather providers are Open-Meteo and WeatherAPI.com. NOAA is US-focused and is kept only as legacy ingestion code, not part of the default French workflow.
 
 ### STAGING
 
@@ -61,7 +62,7 @@ Staging models parse provider-specific JSON and standardize column names and typ
 Models:
 
 - `stg_open_meteo_forecasts`
-- `stg_noaa_forecasts`
+- `stg_weatherapi_forecasts`
 - `stg_user_feedback`
 
 ### INTERMEDIATE
@@ -125,6 +126,14 @@ DBT_SNOWFLAKE_SCHEMA=RAW
 DBT_THREADS=4
 ```
 
+Fill in WeatherAPI.com locally if you want to run the full active ingestion workflow:
+
+```text
+WEATHERAPI_API_KEY=
+WEATHERAPI_FORECAST_DAYS=7
+DEFAULT_CITIES=Paris,Rennes,Lyon,Marseille,Toulouse,Bordeaux,Lille,Nantes,Strasbourg,Nice,Montpellier,Grenoble
+```
+
 Never commit `.env`. It contains local secrets and is ignored by Git. `.env.example` is the safe committed template.
 
 For local development, password authentication is acceptable. For CI/CD or production, prefer CI secret variables or a secrets manager, and later move Snowflake authentication to key-pair auth.
@@ -170,10 +179,30 @@ cd ..\..
 Run ingestion:
 
 ```powershell
+.\scripts\load-env.ps1
 cd data
-python -m ingestion.open_meteo
-python -m ingestion.noaa
+python -m ingestion.run_weather_ingestion
 cd ..
+```
+
+The runner loads Open-Meteo and WeatherAPI.com payloads into `RAW.WEATHER_FORECAST_PAYLOADS`. From the repository root, the namespace-package form also works in a configured environment:
+
+```powershell
+python -m data.ingestion.run_weather_ingestion
+```
+
+Validate RAW weather ingestion in Snowflake:
+
+```sql
+select
+    provider,
+    city_name,
+    country,
+    count(*) as rows_count,
+    max(ingested_at) as latest_ingestion
+from RAW.WEATHER_FORECAST_PAYLOADS
+group by provider, city_name, country
+order by provider, city_name;
 ```
 
 Run dbt:
@@ -265,6 +294,7 @@ CI runs Python linting, mypy, pytest, Prettier, and Astro checks.
 Implemented:
 
 - Snowflake RAW ingestion structure
+- French weather provider ingestion with Open-Meteo and WeatherAPI.com
 - dbt-snowflake project structure
 - staging, intermediate, and marts models
 - dbt data tests
@@ -282,4 +312,4 @@ Not implemented yet:
 
 ## Interview Explanation
 
-WOOTD follows a classic analytics engineering architecture. Python ingestion loads raw weather API responses into Snowflake. dbt transforms raw provider payloads into standardized staging models, applies business logic in intermediate models, and publishes API-ready marts. FastAPI consumes the mart table to serve outfit recommendations, while feedback events are written back into Snowflake for future analytics and ML.
+WOOTD follows a classic analytics engineering architecture. Python ingestion loads raw French weather API responses from Open-Meteo and WeatherAPI.com into Snowflake. dbt transforms raw provider payloads into standardized staging models, applies business logic in intermediate models, and publishes API-ready marts. FastAPI consumes the mart table to serve outfit recommendations, while feedback events are written back into Snowflake for future analytics and ML.

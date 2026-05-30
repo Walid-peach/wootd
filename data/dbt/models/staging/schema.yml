@@ -20,8 +20,8 @@ models:
         tests:
           - not_null
 
-  - name: stg_noaa_forecasts
-    description: NOAA forecast periods normalized into the shared weather columns.
+  - name: stg_weatherapi_forecasts
+    description: Daily WeatherAPI.com forecasts parsed from raw JSON payloads.
     columns:
       - name: city_name
         tests:
@@ -33,6 +33,9 @@ models:
         tests:
           - not_null
       - name: temp_max_c
+        tests:
+          - not_null
+      - name: precip_probability
         tests:
           - not_null
 

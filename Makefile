@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help setup dev down api-dev web-dev test test-api test-data lint fmt ingest ingest-open-meteo ingest-noaa dbt-debug dbt-seed dbt-run dbt-test dbt-docs clean
+.PHONY: help setup dev down api-dev web-dev test test-api test-data lint fmt ingest ingest-weather ingest-open-meteo ingest-weatherapi dbt-debug dbt-seed dbt-run dbt-test dbt-docs clean
 
 help: ## List all targets with descriptions
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -40,13 +40,16 @@ test-api: ## Run API tests
 test-data: ## Run data layer tests
 	uv run pytest data/tests/ -v
 
-ingest: ingest-open-meteo ingest-noaa ## Run all Snowflake RAW ingestions
+ingest: ingest-weather ## Run active French weather provider ingestion
+
+ingest-weather: ## Ingest active French weather providers into Snowflake RAW
+	cd data && uv run python -m ingestion.run_weather_ingestion
 
 ingest-open-meteo: ## Ingest Open-Meteo forecasts into Snowflake RAW
 	cd data && uv run python -m ingestion.open_meteo
 
-ingest-noaa: ## Ingest NOAA forecasts into Snowflake RAW
-	cd data && uv run python -m ingestion.noaa
+ingest-weatherapi: ## Ingest WeatherAPI.com forecasts into Snowflake RAW
+	cd data && uv run python -m ingestion.weatherapi
 
 dbt-debug: ## Validate dbt Snowflake connection
 	cd data/dbt && uv run dbt debug --profiles-dir .

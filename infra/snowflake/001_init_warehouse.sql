@@ -12,6 +12,17 @@ create schema if not exists WOOTD_DB.STAGING;
 create schema if not exists WOOTD_DB.INTERMEDIATE;
 create schema if not exists WOOTD_DB.MARTS;
 
+create table if not exists WOOTD_DB.RAW.WEATHER_FORECAST_PAYLOADS (
+  INGESTION_ID string default uuid_string(),
+  PROVIDER string not null,
+  CITY_NAME string not null,
+  COUNTRY string not null,
+  LATITUDE float,
+  LONGITUDE float,
+  INGESTED_AT timestamp_tz not null,
+  PAYLOAD variant not null
+);
+
 create table if not exists WOOTD_DB.RAW.OPEN_METEO_FORECASTS (
   INGESTION_ID string default uuid_string(),
   PROVIDER string not null,

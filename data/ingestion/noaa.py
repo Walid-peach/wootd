@@ -1,4 +1,7 @@
-"""Ingest US forecasts from NOAA into Snowflake RAW."""
+"""Legacy US-focused NOAA ingestion.
+
+NOAA is not part of the active French weather ingestion workflow.
+"""
 
 from __future__ import annotations
 
@@ -6,8 +9,8 @@ from typing import Any, TypedDict, cast
 
 import requests
 
-from ingestion.common import configured_cities, utc_now
-from ingestion.snowflake_loader import (
+from .common import configured_cities, utc_now
+from .snowflake_loader import (
     connect,
     ensure_raw_tables,
     load_noaa_rows,

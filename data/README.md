@@ -5,13 +5,16 @@ The data layer ingests raw weather API responses into Snowflake and transforms t
 ## Flow
 
 ```text
-Open-Meteo / NOAA
+French city config
+  -> Open-Meteo / WeatherAPI.com
   -> Python ingestion
-  -> Snowflake RAW
+  -> Snowflake RAW.WEATHER_FORECAST_PAYLOADS
   -> dbt STAGING
   -> dbt INTERMEDIATE
   -> dbt MARTS
 ```
+
+NOAA is US-focused and is not part of the active default ingestion workflow.
 
 ## Main Commands
 
@@ -21,4 +24,11 @@ make dbt-seed
 make dbt-run
 make dbt-test
 make dbt-docs
+```
+
+Manual ingestion without Make:
+
+```bash
+cd data
+python -m ingestion.run_weather_ingestion
 ```
